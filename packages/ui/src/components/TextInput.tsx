@@ -1,5 +1,6 @@
 import { View, Text, TextInput as RNTextInput, type TextInputProps as RNTextInputProps } from 'react-native';
 import { useState } from 'react';
+import { colors } from '../theme';
 
 interface TextInputProps extends RNTextInputProps {
   label?: string;
@@ -22,7 +23,7 @@ export function TextInput({ label, error, className, ...props }: TextInputProps 
               ? 'border-primary'
               : 'border-border'
         }`}
-        placeholderTextColor="#4A5568"
+        placeholderTextColor={colors.disabled}
         onFocus={(e) => {
           setFocused(true);
           props.onFocus?.(e);

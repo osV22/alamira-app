@@ -1,6 +1,7 @@
 import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../theme';
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
@@ -53,7 +54,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             >
               {icon && icon({
                 focused: isFocused,
-                color: isFocused ? '#90FF00' : '#5A6A78',
+                color: isFocused ? colors.primary : colors.disabled,
                 size: 22,
               })}
               {isFocused && (
@@ -82,14 +83,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(22, 28, 36, 0.92)',
+    backgroundColor: colors.surfaceTranslucent,
     borderRadius: 28,
     paddingVertical: 8,
     paddingHorizontal: 6,
     gap: 4,
     // Border
     borderWidth: 1,
-    borderColor: 'rgba(45, 54, 67, 0.6)',
+    borderColor: colors.borderTranslucent,
     // Shadow
     ...Platform.select({
       ios: {
@@ -113,13 +114,13 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tabActive: {
-    backgroundColor: 'rgba(144, 255, 0, 0.12)',
+    backgroundColor: colors.primaryMuted,
     paddingHorizontal: 20,
   },
   labelActive: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#90FF00',
+    color: colors.primary,
     letterSpacing: 0.2,
   },
 });

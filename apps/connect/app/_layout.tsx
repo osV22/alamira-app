@@ -55,6 +55,7 @@ export default function RootLayout() {
     <ThemeProvider value={alamiraDark}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="onboarding" options={{ presentation: 'modal' }} />
       </Stack>
       <StatusBar style="light" />
     </ThemeProvider>

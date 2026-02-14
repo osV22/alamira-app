@@ -1,27 +1,43 @@
 /**
- * Alamira dark theme tokens.
+ * Alamira dark theme tokens — single source of truth.
  *
- * Canonical color values live in each app's tailwind.config.ts.
- * This file re-exports them as a plain object for cases where
- * you need values outside of NativeWind className (e.g. StatusBar,
- * React Navigation theme, Reanimated, or any imperative API).
+ * Every color in the app should reference this file.
+ * Tailwind configs import from here; components use `colors.*`.
  */
+
+/** Convert a hex color (#RRGGBB) to an rgba string. */
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const primary = '#34FF85';
+const surface = '#1A2029';
+const border = '#2D3643';
+
 export const colors = {
   background: '#0F1419',
-  surface: '#1A2029',
+  surface,
   surfaceElevated: '#232B36',
-  surfaceBright: '#2D3643',
+  surfaceBright: border,
 
-  primary: '#90FF00',
-  primaryDim: 'rgba(144, 255, 0, 0.15)',
-  primaryMuted: 'rgba(144, 255, 0, 0.08)',
+  primary,
+  primaryDim: hexToRgba(primary, 0.15),
+  primaryMuted: hexToRgba(primary, 0.08),
 
   foreground: '#E8ECF0',
   muted: '#8899A6',
   disabled: '#4A5568',
 
-  border: '#2D3643',
+  border,
   borderBright: '#3D4A5C',
+
+  /** Semi-transparent surface for overlays (e.g. floating tab bar). */
+  surfaceTranslucent: hexToRgba(surface, 0.92),
+  /** Semi-transparent border for overlays. */
+  borderTranslucent: hexToRgba(border, 0.6),
 
   error: '#FF4D6A',
   success: '#4ADE80',

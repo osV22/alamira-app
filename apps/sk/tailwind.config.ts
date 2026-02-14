@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { colors } from '../../packages/ui/src/theme';
 
 export default {
   content: [
@@ -10,30 +11,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0F1419',
+        background: colors.background,
         surface: {
-          DEFAULT: '#1A2029',
-          elevated: '#232B36',
-          bright: '#2D3643',
+          DEFAULT: colors.surface,
+          elevated: colors.surfaceElevated,
+          bright: colors.surfaceBright,
         },
         primary: {
-          DEFAULT: '#90FF00',
-          dim: 'rgba(144, 255, 0, 0.15)',
-          muted: 'rgba(144, 255, 0, 0.08)',
+          DEFAULT: colors.primary,
+          dim: colors.primaryDim,
+          muted: colors.primaryMuted,
         },
-        foreground: '#E8ECF0',
+        foreground: colors.foreground,
         muted: {
-          DEFAULT: '#8899A6',
-          foreground: '#8899A6',
+          DEFAULT: colors.muted,
+          foreground: colors.muted,
         },
-        disabled: '#4A5568',
+        disabled: colors.disabled,
         border: {
-          DEFAULT: '#2D3643',
-          bright: '#3D4A5C',
+          DEFAULT: colors.border,
+          bright: colors.borderBright,
         },
-        error: '#FF4D6A',
-        success: '#4ADE80',
-        warning: '#FBBF24',
+        error: colors.error,
+        success: colors.success,
+        warning: colors.warning,
       },
     },
   },
