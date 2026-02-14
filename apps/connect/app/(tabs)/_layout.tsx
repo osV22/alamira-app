@@ -1,41 +1,41 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import { HomeSimple, Antenna, Settings } from 'iconoir-react-native';
 
-import { theme } from '@alamira/ui';
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
-}
+import { TabBar } from '@alamira/ui/src/components/TabBar';
 
 export default function TabLayout() {
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        headerShown: true,
-      }}>
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color }) => <TabBarIcon name="dashboard" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <HomeSimple color={color} width={size} height={size} strokeWidth={1.8} />
+          ),
         }}
       />
       <Tabs.Screen
         name="devices"
         options={{
           title: 'Devices',
-          tabBarIcon: ({ color }) => <TabBarIcon name="bluetooth-b" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Antenna color={color} width={size} height={size} strokeWidth={1.8} />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Settings color={color} width={size} height={size} strokeWidth={1.8} />
+          ),
         }}
       />
     </Tabs>

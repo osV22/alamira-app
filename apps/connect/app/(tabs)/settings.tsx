@@ -1,32 +1,40 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
-import { theme } from '@alamira/ui';
+import { ScreenContainer } from '@alamira/ui/src/components/ScreenContainer';
+import { Card } from '@alamira/ui/src/components/Card';
 
-export default function SettingsScreen() {
+function SettingsRow({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
-      <Text style={styles.version}>Alamira Connect v0.1.0</Text>
-    </View>
+    <Pressable className="flex-row items-center justify-between py-3 active:opacity-70">
+      <Text className="text-base text-foreground">{label}</Text>
+      <Text className="text-sm text-muted">{value}</Text>
+    </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.background,
-    padding: theme.spacing.lg,
-  },
-  title: {
-    fontSize: theme.fontSize['2xl'],
-    fontWeight: theme.fontWeight.bold,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.md,
-  },
-  version: {
-    fontSize: theme.fontSize.sm,
-    color: theme.colors.textSecondary,
-  },
-});
+export default function SettingsScreen() {
+  return (
+    <ScreenContainer>
+      <Text className="text-2xl font-bold text-foreground mb-6">Settings</Text>
+
+      <Card className="mb-4">
+        <Text className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">General</Text>
+        <SettingsRow label="Units" value="Metric" />
+        <View className="h-px bg-border" />
+        <SettingsRow label="Language" value="English" />
+      </Card>
+
+      <Card className="mb-4">
+        <Text className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">About</Text>
+        <SettingsRow label="App Version" value="0.1.0" />
+        <View className="h-px bg-border" />
+        <SettingsRow label="Build" value="Dev" />
+      </Card>
+
+      <View className="items-center mt-8">
+        <Text className="text-xs text-disabled">Alamira Connect</Text>
+        <Text className="text-xs text-disabled mt-1">Made for mariners</Text>
+      </View>
+    </ScreenContainer>
+  );
+}
