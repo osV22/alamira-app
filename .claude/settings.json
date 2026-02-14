@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(turbo *)",
+      "Bash(npx expo *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(eas *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(mkdir *)",
+      "Bash(ls *)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}

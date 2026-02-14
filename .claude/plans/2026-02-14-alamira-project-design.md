@@ -19,20 +19,19 @@ The hardware is still in MVP / pre-production. We need a companion app ready for
 
 ### Two apps, not one
 
-- **Companion app** — pairs with Alamira hardware displays via BLE. Handles setup, config push, firmware updates. Only useful if you own an Alamira device.
-- **Instrument display app** — free app for any boater. Connects to Signal K / NMEA sources and shows real-time boat data on the phone. Includes subtle Alamira branding and a newsletter signup to funnel users toward the hardware product.
+- **Alamira Connect** — pairs with Alamira hardware displays via BLE. Handles setup, config push, firmware updates. Only useful if you own an Alamira device.
+- **Alamira SK** — free app for any boater. Connects to Signal K / NMEA sources and shows real-time boat data on the phone. Includes subtle Alamira branding and a newsletter signup to funnel users toward the hardware product.
 
-Rationale: keeping them separate means each app has a focused purpose and clean UX. The sales funnel still works — the instrument app collects emails, we market the hardware via newsletter. Users who buy hardware download the companion app when they need it (high motivation at that point, so the second install is not a friction problem).
+Rationale: keeping them separate means each app has a focused purpose and clean UX. The sales funnel still works — Alamira SK collects emails, we market the hardware via newsletter. Users who buy hardware download Alamira Connect when they need it (high motivation at that point, so the second install is not a friction problem).
 
 ### Monorepo for the two React Native apps
 
 ```
 alamira/                              ← Monorepo (Turborepo)
 ├── apps/
-│   ├── companion/                    ← Hardware companion app (priority)
-│   └── instruments/                  ← Free boat instrument display (phase 2)
+│   ├── connect/                      ← Alamira Connect — hardware companion (priority)
+│   └── sk/                           ← Alamira SK — free instrument display (phase 2)
 ├── packages/
-│   ├── boat-data/                    ← Shared: Signal K client, NMEA parsers, types
 │   ├── ui/                           ← Shared: common UI components, theme
 │   └── assets/                       ← Shared: logos, fonts, brand assets
 ├── turbo.json
@@ -40,8 +39,13 @@ alamira/                              ← Monorepo (Turborepo)
 ```
 
 - Turborepo is used as a local build orchestration tool only. No Vercel cloud services (no remote caching, no Vercel hosting, no Vercel deployment).
-- The two apps share a data layer (`packages/boat-data/`) since both need to understand Signal K paths and boat data types.
 - Shared UI components and brand assets avoid duplication.
+- Additional shared packages will be added as needed (e.g. `packages/cloud/` for Supabase auth and cloud sync when both apps need it). No premature shared packages.
+
+**What the apps do NOT share today:**
+- Alamira Connect does not consume boat data (Signal K / NMEA). It talks to the hardware device via BLE and WiFi.
+- Alamira SK does not talk to hardware devices. It connects directly to boat data sources.
+- A shared boat-data package is not needed unless Connect gains boat telemetry features in the future.
 
 ### Firmware stays in a separate repo
 
@@ -49,7 +53,7 @@ The hardware firmware (`lv_web_emscripten`) is C/LVGL with CMake/Emscripten. Dif
 
 ---
 
-## Phase 1: Companion App (Manufacturer Demo)
+## Phase 1: Alamira Connect (Manufacturer Demo)
 
 ### Purpose
 
@@ -88,7 +92,7 @@ Follows the existing architecture guide (`notes/architecture-guide.md`):
 
 ### Architecture
 
-The companion app follows the architecture guide's patterns:
+Alamira Connect follows the architecture guide's patterns:
 
 - **Services have no React dependency.** BLE, network, config, device management are plain TypeScript.
 - **Adapter pattern for BLE.** Only `adapter.ts` imports react-native-ble-plx.
@@ -96,10 +100,10 @@ The companion app follows the architecture guide's patterns:
 - **Thin route files.** `app/` directory contains only routing wrappers.
 - **Zustand slices** for domain state (BLE, devices, network, app).
 
-### App structure (companion)
+### App structure (Alamira Connect)
 
 ```
-apps/companion/
+apps/connect/
 ├── app/                              ← Expo Router routes
 │   ├── _layout.tsx
 │   ├── (tabs)/
@@ -129,7 +133,7 @@ apps/companion/
 
 ---
 
-## Phase 2: Instrument Display App (Future)
+## Phase 2: Alamira SK (Future)
 
 ### Purpose
 
@@ -148,9 +152,9 @@ Free app for any boater. Connects to the boat's Signal K server (or NMEA 0183/20
 
 ### Shared code (via packages/)
 
-- `packages/boat-data/` — Signal K client wrapper, NMEA parsers, boat data types, unit conversion
 - `packages/ui/` — shared theme, brand colors, common components
 - `packages/assets/` — logos, fonts
+- Boat data logic (Signal K client, NMEA parsers, types) lives inside Alamira SK until another app needs it. No premature extraction to a shared package.
 
 ---
 
