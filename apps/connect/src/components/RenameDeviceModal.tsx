@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Modal, View, Text, Pressable } from 'react-native';
+import { Modal, View, Text, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+import { Xmark } from 'iconoir-react-native';
 
 import { TextInput } from '@alamira/ui/src/components/TextInput';
-import { Button } from '@alamira/ui/src/components/Button';
+import { colors } from '@alamira/ui/src/theme';
 
 interface RenameDeviceModalProps {
   visible: boolean;
@@ -28,44 +29,66 @@ export function RenameDeviceModal({ visible, currentName, onSave, onClose }: Ren
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        className="flex-1 items-center justify-center"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
-        onPress={onClose}
-      >
-        <Pressable
-          className="w-80 rounded-xl border border-border bg-surface p-6"
-          onPress={() => {}}
-        >
-          <Text className="text-lg font-semibold text-foreground mb-4">
-            Rename Device
-          </Text>
+      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
+        {/* Dismiss overlay */}
+        <Pressable style={{ flex: 1 }} onPress={onClose} />
 
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            placeholder="Device name"
-            autoFocus
-            selectTextOnFocus
-            returnKeyType="done"
-            onSubmitEditing={handleSave}
-            className="mb-6"
-          />
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View
+            style={{
+              backgroundColor: colors.surface,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              borderTopWidth: 1,
+              borderTopColor: colors.border,
+              paddingHorizontal: 20,
+              paddingTop: 12,
+              paddingBottom: 40,
+            }}
+          >
+            {/* Handle bar */}
+            <View style={{ alignItems: 'center', marginBottom: 16 }}>
+              <View style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: colors.disabled }} />
+            </View>
 
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Button variant="outline" onPress={onClose}>
-                Cancel
-              </Button>
+            {/* Header */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <Text style={{ fontSize: 18, fontWeight: '600', color: colors.foreground }}>Rename Device</Text>
+              <Pressable onPress={onClose} style={{ padding: 4 }}>
+                <Xmark width={22} height={22} color={colors.muted} strokeWidth={1.5} />
+              </Pressable>
             </View>
-            <View className="flex-1">
-              <Button variant="solid" disabled={isSaveDisabled} onPress={handleSave}>
-                Save
-              </Button>
-            </View>
+
+            {/* Input */}
+            <TextInput
+              label="Device Name"
+              value={name}
+              onChangeText={setName}
+              placeholder="Device name"
+              autoFocus
+              selectTextOnFocus
+              returnKeyType="done"
+              onSubmitEditing={handleSave}
+            />
+
+            {/* Save button */}
+            <Pressable
+              onPress={handleSave}
+              disabled={isSaveDisabled}
+              style={{
+                marginTop: 24,
+                backgroundColor: isSaveDisabled ? colors.disabled : colors.primary,
+                paddingVertical: 14,
+                borderRadius: 12,
+                alignItems: 'center',
+                opacity: isSaveDisabled ? 0.5 : 1,
+              }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: '600', color: colors.background }}>Save</Text>
+            </Pressable>
           </View>
-        </Pressable>
-      </Pressable>
+        </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 }
