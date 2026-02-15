@@ -11,6 +11,8 @@ export default function OnboardingLayout() {
     >
       <Stack.Screen name="scan" />
       <Stack.Screen name="connecting" />
+      <Stack.Screen name="product-info" />
+      <Stack.Screen name="firmware-update" />
       <Stack.Screen name="wifi-setup" />
       <Stack.Screen name="verifying" />
       <Stack.Screen name="name-device" />

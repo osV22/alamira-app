@@ -4,9 +4,11 @@ import { useStore } from '../store';
 import { WifiProvisioningService } from '../services/wifi/WifiProvisioningService';
 import { WifiAdapter } from '../services/wifi/adapter';
 import { parseQRPayload } from '../services/qr/parser';
+import { SimulatorService } from '../services/simulator/SimulatorService';
 import type { PairedDevice } from '../services/device/types';
 
 const wifiService = new WifiProvisioningService(new WifiAdapter());
+const simulatorService = new SimulatorService();
 
 /** Tracks the IP assigned to the device after WiFi provisioning. */
 let provisionedIp: string | null = null;
@@ -20,6 +22,9 @@ export function useOnboarding() {
   const deviceName = useStore((s) => s.deviceName);
   const error = useStore((s) => s.error);
   const isLoading = useStore((s) => s.isLoading);
+  const isSimulated = useStore((s) => s.isSimulated);
+  const firmwareProgress = useStore((s) => s.firmwareProgress);
+  const firmwareUpdateInfo = useStore((s) => s.firmwareUpdateInfo);
 
   const handleQRScan = useCallback(async (raw: string) => {
     const {
@@ -52,13 +57,70 @@ export function useOnboarding() {
         parsed.api_port,
       );
       setNetworks(scannedNetworks);
-      setStep('wifi-setup');
+      setStep('product-info');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to connect to device');
       setStep('scan');
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  const simulateDevice = useCallback(() => {
+    const {
+      setIsSimulated,
+      setQRData,
+      setDeviceInfo,
+      setFirmwareUpdateInfo,
+      setStep,
+    } = useStore.getState();
+
+    const simDevice = simulatorService.getSimulatedDevice();
+
+    setIsSimulated(true);
+    setQRData(simDevice.qrPayload);
+    setDeviceInfo(simDevice.deviceInfo);
+    setFirmwareUpdateInfo(simDevice.firmwareUpdate);
+    setStep('product-info');
+  }, []);
+
+  const checkFirmwareUpdate = useCallback(() => {
+    const { setFirmwareUpdateInfo, setStep, isSimulated: simulated } = useStore.getState();
+
+    if (simulated) {
+      const simUpdate = simulatorService.getSimulatedFirmwareUpdate();
+      setFirmwareUpdateInfo(simUpdate);
+    }
+
+    setStep('firmware-update');
+  }, []);
+
+  const applyFirmwareUpdate = useCallback(() => {
+    const { setFirmwareProgress } = useStore.getState();
+
+    setFirmwareProgress(0);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 8 + 2;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        setFirmwareProgress(100);
+        return;
+      }
+      setFirmwareProgress(Math.round(progress));
+    }, 100);
+  }, []);
+
+  const skipFirmwareUpdate = useCallback(() => {
+    const { setStep, isSimulated: simulated } = useStore.getState();
+    setStep(simulated ? 'name' : 'wifi-setup');
+  }, []);
+
+  const advancePastFirmware = useCallback(() => {
+    const { setStep, isSimulated: simulated } = useStore.getState();
+    setStep(simulated ? 'name' : 'wifi-setup');
   }, []);
 
   const sendCredentials = useCallback(
@@ -116,9 +178,33 @@ export function useOnboarding() {
   );
 
   const nameDevice = useCallback((name: string) => {
-    const { setDeviceName, setStep } = useStore.getState();
+    const { setDeviceName, setStep, isSimulated: simulated } = useStore.getState();
     setDeviceName(name);
-    setStep('configure');
+
+    if (simulated) {
+      const {
+        deviceInfo: currentDeviceInfo,
+        qrData: currentQrData,
+        addDevice,
+      } = useStore.getState();
+
+      if (currentDeviceInfo && currentQrData) {
+        const device: PairedDevice = {
+          id: currentDeviceInfo.device_id,
+          name: name || currentDeviceInfo.model,
+          ip: currentQrData.ip ?? '192.168.1.100',
+          port: currentQrData.api_port,
+          model: currentDeviceInfo.model,
+          firmware_version: currentDeviceInfo.firmware_version,
+          serial: currentDeviceInfo.serial,
+          paired_at: Date.now(),
+        };
+        addDevice(device);
+      }
+      setStep('complete');
+    } else {
+      setStep('configure');
+    }
   }, []);
 
   const completeOnboarding = useCallback(() => {
@@ -162,9 +248,17 @@ export function useOnboarding() {
     deviceName,
     error,
     isLoading,
+    isSimulated,
+    firmwareProgress,
+    firmwareUpdateInfo,
 
     // Actions
     handleQRScan,
+    simulateDevice,
+    checkFirmwareUpdate,
+    applyFirmwareUpdate,
+    skipFirmwareUpdate,
+    advancePastFirmware,
     sendCredentials,
     nameDevice,
     completeOnboarding,

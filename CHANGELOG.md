@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.0 - February 15, 2026
+### Added
+- Simulator stub mode with in-app dev toggle for UI development without hardware
+- Product info screen showing device model, serial, and firmware details
+- Firmware update screen with version comparison, release notes, and progress bar
+- Device-centric home screen with paired device cards, status indicators, and FAB
+- SimulatorService as pure data factory for mock device data
+
+### Changed
+- Onboarding flow now routes through product-info and firmware-update screens
+- Sim mode skips WiFi/verifying/configure steps, goes straight to naming
+
+### Removed
+- Old plan docs from docs/plans/ (moved to .claude/plans/)
+
 ## 0.5.0 - February 15, 2026
 ### Added
 - Simulator app scaffold for testing without physical hardware

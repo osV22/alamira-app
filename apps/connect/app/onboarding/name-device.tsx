@@ -17,6 +17,8 @@ export default function NameDeviceScreen() {
   useEffect(() => {
     if (step === 'configure') {
       router.replace('/onboarding/configure');
+    } else if (step === 'complete') {
+      router.replace('/onboarding/complete');
     }
   }, [step]);
 

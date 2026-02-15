@@ -26,5 +26,6 @@ export const wifiLog = log.extend('wifi');
 export const deviceLog = log.extend('device');
 export const qrLog = log.extend('qr');
 export const storeLog = log.extend('store');
+export const simLog = log.extend('sim');
 
 export default log;

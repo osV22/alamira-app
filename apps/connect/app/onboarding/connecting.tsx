@@ -11,8 +11,8 @@ export default function ConnectingScreen() {
   const { step, error, cancelOnboarding } = useOnboarding();
 
   useEffect(() => {
-    if (step === 'wifi-setup') {
-      router.replace('/onboarding/wifi-setup');
+    if (step === 'product-info') {
+      router.replace('/onboarding/product-info');
     }
   }, [step]);
 

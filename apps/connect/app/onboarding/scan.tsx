@@ -17,7 +17,7 @@ const OVERLAY_OPACITY = 0.6;
 export default function ScanScreen() {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
-  const { step, error, handleQRScan, cancelOnboarding } = useOnboarding();
+  const { step, error, handleQRScan, simulateDevice, cancelOnboarding } = useOnboarding();
   const hasScanned = useRef(false);
   const [layout, setLayout] = useState({ width: 0, height: 0 });
 
@@ -32,8 +32,10 @@ export default function ScanScreen() {
   const frameY = (height - frameSize) / 2 - 40;
 
   useEffect(() => {
-    if (step !== 'scan') {
+    if (step === 'connecting') {
       router.replace('/onboarding/connecting');
+    } else if (step === 'product-info') {
+      router.replace('/onboarding/product-info');
     }
   }, [step, router]);
 
@@ -148,6 +150,16 @@ export default function ScanScreen() {
           Point your camera at the QR code on your Alamira display
         </Text>
       </View>
+
+      {/* Dev-only simulate button */}
+      {__DEV__ && (
+        <View style={[styles.simulateArea, { top: frameY + frameSize + 80 }]}>
+          <Button variant="ghost" size="sm" onPress={simulateDevice}>
+            Simulate Device
+          </Button>
+          <Text style={styles.devBadge}>DEV</Text>
+        </View>
+      )}
       </>)}
 
       {/* Error */}
@@ -222,5 +234,20 @@ const styles = StyleSheet.create({
     color: colors.foreground,
     fontSize: 16,
     textAlign: 'center',
+  },
+  simulateArea: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  devBadge: {
+    color: colors.warning,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
 });
