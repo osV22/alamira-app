@@ -16,7 +16,7 @@ export function TextInput({ label, error, className, ...props }: TextInputProps 
         <Text className="text-sm font-medium text-muted">{label}</Text>
       )}
       <RNTextInput
-        className={`rounded-lg border px-4 py-3 text-base text-foreground bg-surface-bright ${
+        className={`rounded-lg border px-4 h-12 text-foreground bg-surface-bright ${
           error
             ? 'border-error'
             : focused
@@ -24,6 +24,7 @@ export function TextInput({ label, error, className, ...props }: TextInputProps 
               : 'border-border'
         }`}
         placeholderTextColor={colors.disabled}
+        style={{ fontSize: 16, lineHeight: 20 }}
         onFocus={(e) => {
           setFocused(true);
           props.onFocus?.(e);
