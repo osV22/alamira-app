@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Alamira Simulator",
+    "slug": "alamira-simulator",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "alamira-simulator",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alamira.simulator"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0F1419"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.alamira.simulator"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

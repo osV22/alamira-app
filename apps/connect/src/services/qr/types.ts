@@ -3,4 +3,5 @@ export interface AlamiraQRPayload {
   ap_pass: string;
   device_id: string;
   api_port: number;
+  ip?: string;
 }

@@ -20,6 +20,7 @@ export function parseQRPayload(raw: string): AlamiraQRPayload | null {
       ap_pass: data.ap_pass,
       device_id: data.device_id,
       api_port: data.api_port,
+      ...(typeof data.ip === 'string' && { ip: data.ip }),
     };
   } catch (e) {
     qrLog.warn('Failed to parse QR payload', raw);

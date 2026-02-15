@@ -7,18 +7,20 @@ import type {
 import type { AlamiraQRPayload } from '../qr/types';
 import { wifiLog } from '../logger/logger';
 
-const DEVICE_AP_HOST = '192.168.4.1';
+const DEFAULT_AP_HOST = '192.168.4.1';
 
 export class WifiProvisioningService {
   constructor(private adapter: WifiAdapterInterface) {}
 
   async connectToDevice(qrData: AlamiraQRPayload): Promise<DeviceInfo> {
+    const host = qrData.ip ?? DEFAULT_AP_HOST;
+
     wifiLog.info(
-      `Connecting to device AP ${qrData.ap_ssid} at ${DEVICE_AP_HOST}:${qrData.api_port}`,
+      `Connecting to device AP ${qrData.ap_ssid} at ${host}:${qrData.api_port}`,
     );
 
     const deviceInfo = await this.adapter.getDeviceInfo(
-      DEVICE_AP_HOST,
+      host,
       qrData.api_port,
     );
 

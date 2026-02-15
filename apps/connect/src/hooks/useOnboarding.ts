@@ -6,8 +6,6 @@ import { WifiAdapter } from '../services/wifi/adapter';
 import { parseQRPayload } from '../services/qr/parser';
 import type { PairedDevice } from '../services/device/types';
 
-const AP_HOST = '192.168.4.1';
-
 const wifiService = new WifiProvisioningService(new WifiAdapter());
 
 /** Tracks the IP assigned to the device after WiFi provisioning. */
@@ -48,8 +46,9 @@ export function useOnboarding() {
       const info = await wifiService.connectToDevice(parsed);
       setDeviceInfo(info);
 
+      const host = parsed.ip ?? '192.168.4.1';
       const scannedNetworks = await wifiService.scanNetworks(
-        AP_HOST,
+        host,
         parsed.api_port,
       );
       setNetworks(scannedNetworks);
@@ -84,8 +83,9 @@ export function useOnboarding() {
       setError(null);
 
       try {
+        const host = currentQrData.ip ?? '192.168.4.1';
         const response = await wifiService.provision(
-          AP_HOST,
+          host,
           currentQrData.api_port,
           ssid,
           password,
@@ -135,7 +135,7 @@ export function useOnboarding() {
     const device: PairedDevice = {
       id: currentDeviceInfo.device_id,
       name: currentDeviceName || currentDeviceInfo.model,
-      ip: provisionedIp ?? AP_HOST,
+      ip: provisionedIp ?? currentQrData.ip ?? '192.168.4.1',
       port: currentQrData.api_port,
       model: currentDeviceInfo.model,
       firmware_version: currentDeviceInfo.firmware_version,

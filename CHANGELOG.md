@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 - February 15, 2026
+### Added
+- Simulator app scaffold for testing without physical hardware
+- Optional `ip` field in QR payload for custom device addresses
+
+### Changed
+- Device IP sourced from QR code instead of hardcoded AP host
+
 ## 0.4.0 - February 14, 2026
 ### Added
 - Device onboarding flow (scan, WiFi setup, verify, name, complete)
