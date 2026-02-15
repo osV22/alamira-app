@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native';
-import { Database, NetworkRight, MultiplePages } from 'iconoir-react-native';
+import { Database, NetworkRight, MultiplePages, Link, EditPencil } from 'iconoir-react-native';
 
 import { Card } from '@alamira/ui/src/components/Card';
 import { colors } from '@alamira/ui/src/theme';
@@ -33,10 +33,10 @@ function ConnectionRow({ icon, label, badge, status, isLinked, onPress, isLast }
           <Text className="text-foreground text-sm font-medium">{label}</Text>
           {badge && (
             <View
-              className="px-1.5 py-0.5 rounded"
+              className="px-3 py-1 rounded-md"
               style={{ backgroundColor: colors.primaryDim }}
             >
-              <Text style={{ color: colors.primary, fontSize: 10, fontWeight: '600' }}>
+              <Text style={{ color: colors.primary, fontSize: 11, fontWeight: '600' }}>
                 {badge}
               </Text>
             </View>
@@ -45,8 +45,17 @@ function ConnectionRow({ icon, label, badge, status, isLinked, onPress, isLast }
         <Text className="text-muted text-xs mt-0.5">{status}</Text>
       </View>
 
-      <Pressable onPress={onPress} className="active:opacity-70 px-2 py-1">
-        <Text style={{ color: colors.primary, fontSize: 13, fontWeight: '500' }}>
+      <Pressable
+        onPress={onPress}
+        className="active:opacity-70 flex-row items-center gap-1.5 px-3 py-1.5 rounded-lg"
+        style={{ backgroundColor: colors.primaryMuted, borderWidth: 1, borderColor: colors.primaryDim }}
+      >
+        {isLinked ? (
+          <EditPencil width={13} height={13} color={colors.primary} strokeWidth={2} />
+        ) : (
+          <Link width={13} height={13} color={colors.primary} strokeWidth={2} />
+        )}
+        <Text style={{ color: colors.primary, fontSize: 13, fontWeight: '600' }}>
           {isLinked ? 'Edit' : 'Link'}
         </Text>
       </Pressable>

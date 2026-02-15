@@ -1,6 +1,6 @@
 import { View, Text, Pressable, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Antenna, Plus } from 'iconoir-react-native';
+import { Antenna, Plus, Settings } from 'iconoir-react-native';
 
 import { ScreenContainer } from '@alamira/ui/src/components/ScreenContainer';
 import { Card } from '@alamira/ui/src/components/Card';
@@ -29,7 +29,7 @@ export default function HomeScreen() {
   const renderDevice = ({ item }: { item: PairedDevice }) => (
     <Pressable onPress={() => router.push(`/device/${item.id}` as any)} className="mb-3">
       <Card>
-        <View className="flex-row items-center">
+        <View className="flex-row items-center py-1">
           <View className="w-12 h-12 rounded-xl bg-surface-elevated items-center justify-center mr-3">
             <Antenna width={22} height={22} color={colors.muted} strokeWidth={1.5} />
           </View>
@@ -39,9 +39,18 @@ export default function HomeScreen() {
               {item.model} · v{item.firmware_version}
             </Text>
           </View>
-          <View className="items-end">
-            <View className="w-2.5 h-2.5 rounded-full bg-disabled mb-1" />
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-full bg-disabled mr-1.5" />
             <Text className="text-muted text-xs">{formatLastSeen(item.paired_at)}</Text>
+          </View>
+
+          <View
+            className="self-stretch ml-7"
+            style={{ width: 1, backgroundColor: colors.border }}
+          />
+
+          <View className="self-stretch items-center justify-center" style={{ width: 80 }}>
+            <Settings width={20} height={20} color={colors.muted} strokeWidth={1.5} />
           </View>
         </View>
       </Card>
