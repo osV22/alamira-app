@@ -57,7 +57,7 @@ Component → Hook → Zustand Action → Service → Adapter → OS/Device
 
 ## Git Workflow
 
-- **`/commit`** — Stage all changes, craft a descriptive commit message, optionally update CHANGELOG.md, and push. Will prompt before pushing.
+- **`/commit`** — Stage all changes, craft a descriptive commit message, update CHANGELOG.md, and push. Fully automatic, no prompts.
 - **`/commit-fast`** — Same as `/commit` but fully automatic. No prompts, no changelog, just stage → commit → push.
 - **Do not `git push` outside of `/commit` or `/commit-fast`.** A PreToolUse hook guards against accidental pushes.
 - **Do not create or switch branches** without user confirmation (also hook-guarded).

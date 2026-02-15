@@ -13,7 +13,7 @@ export const createDeviceSlice: StateCreator<DeviceSlice> = (set) => ({
   devices: [],
 
   addDevice: (device) =>
-    set((state) => ({ devices: [...state.devices, device] })),
+    set((state) => ({ devices: [...state.devices, { ...device, connections: device.connections ?? [] }] })),
 
   removeDevice: (id) =>
     set((state) => ({

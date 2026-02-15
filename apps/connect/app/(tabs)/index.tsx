@@ -27,7 +27,7 @@ export default function HomeScreen() {
   const handleAddDevice = () => router.push('/onboarding/scan');
 
   const renderDevice = ({ item }: { item: PairedDevice }) => (
-    <Pressable onPress={() => {}} className="mb-3">
+    <Pressable onPress={() => router.push(`/device/${item.id}` as any)} className="mb-3">
       <Card>
         <View className="flex-row items-center">
           <View className="w-12 h-12 rounded-xl bg-surface-elevated items-center justify-center mr-3">

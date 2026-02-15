@@ -16,6 +16,15 @@ export interface FirmwareUpdateInfo {
   releaseNotes: string;
 }
 
+export interface DataConnection {
+  id: string;
+  type: 'signalk' | 'nmea2000' | 'nmea0183';
+  host: string;
+  port: number;
+  name?: string;
+  linked_at: number;
+}
+
 export interface PairedDevice {
   id: string;
   name: string;
@@ -25,6 +34,7 @@ export interface PairedDevice {
   firmware_version: string;
   serial: string;
   paired_at: number;
+  connections: DataConnection[];
 }
 
 export interface DeviceStatus {

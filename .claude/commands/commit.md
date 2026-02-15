@@ -1,18 +1,17 @@
 ---
-description: Stage all changes, commit with a descriptive message, and push to remote
+description: Stage all changes, commit with a descriptive message, update changelogs, and push to remote
 ---
 
 # Commit and Push
 
-When the user invokes `/commit`, perform the following steps:
+When the user invokes `/commit`, perform ALL steps automatically with NO prompts or questions.
 
-## 1. Gather Context
-
-Run these commands in parallel to understand the changes:
+## 1. Gather Context (parallel)
 
 ```bash
 git status
 git diff --stat
+git diff
 git log --oneline -5
 ```
 
@@ -23,6 +22,7 @@ Review what changed:
 - Files modified
 - Files deleted
 - The nature of changes (feature, fix, refactor, cleanup, etc.)
+- **Which apps/packages were touched** (connect, simulator, sk, packages/ui, etc.)
 
 ## 3. Craft Commit Message
 
@@ -38,21 +38,33 @@ Write a commit message that:
 - `Update LVGL bridge to support color gradients`
 - `Remove deprecated API calls, refactor data layer`
 
-## 4. Update Changelog (Optional)
+## 4. Update Changelogs (Always)
 
-Ask the user if they want to update the CHANGELOG.md:
+**Always update changelogs. Do NOT ask — just do it.**
 
-**Question:** "Would you like to add this to CHANGELOG.md?"
-- Yes - update changelog
-- No - skip changelog update
+### Two-tier changelog system
 
-If yes, categorize changes into:
-- **Added** - New features
-- **Changed** - Modified behavior
-- **Removed** - Deleted features
-- **Fixed** - Bug fixes
+1. **Per-app changelogs** — Detailed, specific changes for each app that was touched:
+   - `apps/connect/CHANGELOG.md`
+   - `apps/simulator/CHANGELOG.md`
+   - `apps/sk/CHANGELOG.md`
 
-### Changelog Format
+2. **Monorepo changelog** — High-level summary of which parts of the monorepo were touched:
+   - `CHANGELOG.md` (root)
+
+### Which changelogs to update
+
+- Look at the files changed to determine which apps were affected
+- Update **only the per-app changelogs for apps that had changes**
+- **Always** update the root monorepo changelog with a summary line per affected app
+
+### Per-App Changelog Format
+
+Detailed entries categorized into whichever apply:
+- **Added** — New features
+- **Changed** — Modified behavior
+- **Removed** — Deleted features
+- **Fixed** — Bug fixes
 
 ```markdown
 ## X.X.X - Month Day, Year
@@ -60,12 +72,26 @@ If yes, categorize changes into:
 - Brief description (5-10 words max)
 ```
 
-### Writing Style
+Each app has its own independent version number. Increment per app (patch for fixes, minor for features).
 
-- **Keep entries brief** - 15-25 words max per bullet point
-- **Start with the thing affected** - "Font upload modal", "Widget sync"
-- **No paragraphs** - one concise line per entry
-- **One feature per bullet** - split if needed
+### Monorepo Changelog Format
+
+High-level, one line per affected area:
+
+```markdown
+## Month Day, Year
+- Connect: Add device onboarding flow and BLE pairing
+- Simulator: Fix firmware preview rendering
+```
+
+The monorepo changelog does NOT use version numbers — just dates. Each entry is a short summary of what happened in that app/area.
+
+### Writing Style (applies to per-app changelogs)
+
+- **Keep entries brief** — 15-25 words max per bullet point
+- **Start with the thing affected** — "Font upload modal", "Widget sync"
+- **No paragraphs** — one concise line per entry
+- **One feature per bullet** — split if needed
 - **Sub-bullets only for essential detail**
 
 **Good:**
@@ -77,17 +103,22 @@ If yes, categorize changes into:
 
 ### Update Rules
 
-1. Read CHANGELOG.md to find the latest version number
-2. Increment version (patch for fixes, minor for features)
+1. Read the relevant CHANGELOG.md file(s) to find the latest version number
+2. Increment version per app (patch for fixes, minor for features)
 3. Use the **Edit tool** to insert the new entry directly after the `# Changelog` heading — do NOT rewrite the file with Write
 4. Use today's date, no git hash in the heading
 5. Omit empty sections (only include Added/Changed/Removed/Fixed that apply)
 
-**CRITICAL: NEVER use the Write tool on CHANGELOG.md.** Always use Edit to prepend new entries after `# Changelog\n`. This preserves all existing changelog history. The old_string should be `# Changelog\n` and the new_string should be `# Changelog\n\n## X.X.X - ...` with the new entry followed by the existing content left untouched.
+**CRITICAL: NEVER use the Write tool on an existing CHANGELOG.md.** Always use Edit to prepend new entries after `# Changelog\n`. This preserves all existing changelog history. The old_string should be `# Changelog\n` and the new_string should be `# Changelog\n\n## ...` with the new entry followed by the existing content left untouched.
+
+### If changes touch shared packages only
+
+If only `packages/ui/` or `packages/assets/` changed (no app changes), update only the root monorepo changelog with a line like:
+- `packages/ui: Update theme colors`
 
 ## 5. Execute
 
-If changelog was updated in step 4, it's already on disk and will be picked up by `git add`.
+Stage all changes (including the changelog updates), commit, and push in sequence:
 
 ```bash
 git add .
@@ -95,16 +126,22 @@ git commit -m "<message>"
 git push
 ```
 
-## 6. Confirm
+**No confirmation prompts. No asking before pushing. Just do it.**
 
-Show the user the commit hash and confirm it was pushed.
+## 6. Report Result
 
-If changelog was updated, show the new version entry that was added.
+Show:
+- The commit message used
+- The commit hash
+- Push status (success or any errors)
+- Which changelogs were updated and the entries added
 
-## Important
+## Rules
 
-- Do NOT use `git add -A` (use `git add .` instead)
+- Do NOT ask any questions
+- Do NOT prompt before pushing
+- Do NOT use `git add -A` (use `git add .`)
 - Do NOT amend previous commits unless explicitly asked
 - Do NOT force push
 - If push fails due to remote changes, inform the user
-- Changelog updates should reflect user-facing changes, not internal refactors (unless significant)
+- Changelog entries should reflect user-facing changes, not internal refactors (unless significant)
