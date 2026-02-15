@@ -1,4 +1,4 @@
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { View, Text, Image, Pressable, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Antenna, Plus, Settings } from 'iconoir-react-native';
 
@@ -6,6 +6,7 @@ import { ScreenContainer } from '@alamira/ui/src/components/ScreenContainer';
 import { Card } from '@alamira/ui/src/components/Card';
 import { Button } from '@alamira/ui/src/components/Button';
 import { colors } from '@alamira/ui/src/theme';
+import { productImages } from '@alamira/assets/src';
 import { useDevices } from '../../src/hooks/useDevices';
 import type { PairedDevice } from '../../src/services/device/types';
 
@@ -29,28 +30,32 @@ export default function HomeScreen() {
   const renderDevice = ({ item }: { item: PairedDevice }) => (
     <Pressable onPress={() => router.push(`/device/${item.id}` as any)} className="mb-3">
       <Card>
-        <View className="flex-row items-center py-1">
-          <View className="w-12 h-12 rounded-xl bg-surface-elevated items-center justify-center mr-3">
-            <Antenna width={22} height={22} color={colors.muted} strokeWidth={1.5} />
+        <View className="flex-row items-center py-3">
+          <View className="rounded-xl overflow-hidden mr-4">
+            <Image
+              source={productImages.display}
+              style={{ width: 160, height: 88 }}
+              resizeMode="cover"
+            />
           </View>
           <View className="flex-1">
-            <Text className="text-foreground font-semibold text-base">{item.name}</Text>
-            <Text className="text-muted text-xs mt-0.5">
+            <Text className="text-foreground font-semibold text-[17px] leading-[22px]">{item.name}</Text>
+            <Text className="text-muted text-[13px] leading-[18px] mt-1">
               {item.model} · v{item.firmware_version}
             </Text>
           </View>
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-full bg-disabled mr-1.5" />
-            <Text className="text-muted text-xs">{formatLastSeen(item.paired_at)}</Text>
+            <Text className="text-muted text-[13px]">{formatLastSeen(item.paired_at)}</Text>
           </View>
 
           <View
-            className="self-stretch ml-7"
+            className="self-stretch ml-5"
             style={{ width: 1, backgroundColor: colors.border }}
           />
 
           <View className="self-stretch items-center justify-center" style={{ width: 80 }}>
-            <Settings width={20} height={20} color={colors.muted} strokeWidth={1.5} />
+            <Settings width={22} height={22} color={colors.muted} strokeWidth={1.5} />
           </View>
         </View>
       </Card>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1 - February 15, 2026
+### Changed
+- Device card shows product display image instead of antenna icon
+- Slightly larger font sizes and spacing on device card
+
 ## 0.7.0 - February 15, 2026
 ### Added
 - Device detail screen with info display, firmware check, and remove device
